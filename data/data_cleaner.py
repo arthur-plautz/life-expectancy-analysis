@@ -171,40 +171,57 @@ class DataCleaner:
         return df[['country', 'mean']]
 
     def format(self):
+        def transpose_col(df, country, target):
+            df_country = df.query(f'country == "{country}"')
+            return float(df_country[target]) if not df_country[target].empty else None
+        dfs = {
+            'life_expectancy': {
+                'df': self.life_expectancy(),
+                'target': 'total'
+            },
+            'rmnch_by_wealth': {
+                'df': self.rmnch_by_wealth(),
+                'target': 'mean'
+            },
+            'air_polution': {
+                'df': self.air_polution(),
+                'target': 'total'
+            },
+            'basic_sanitation': {
+                'df': self.basic_sanitation(),
+                'target': 'total'
+            },
+            'inequality': {
+                'df': self.inequality(),
+                'target': 'coef'
+            },
+            'mortality': {
+                'df': self.mortality(),
+                'target': 'total'
+            },
+            'violence': {
+                'df': self.violence(),
+                'target': 'total'
+            },
+            'water_quality': {
+                'df': self.water_quality(),
+                'target': 'total'
+            }
+        }
         data = []
-        df_life_expectancy = self.life_expectancy()
-        df_rmnch_by_wealth = self.rmnch_by_wealth()
-        df_air_polution = self.air_polution()
-        df_basic_sanitation = self.basic_sanitation()
-        df_inequality = self.inequality()
-        df_mortality = self.mortality()
-        df_violence = self.violence()
-        df_water_quality = self.water_quality()
-        for country in df_rmnch_by_wealth.country:
+        for country in dfs['rmnch_by_wealth']['df'].country:
             row = {'country': country}
-            life_expectancy = df_life_expectancy.query(f'country == "{country}"')
-            row['life_expectancy'] = float(life_expectancy['total']) if not life_expectancy['total'].empty else None 
-            rmnch_by_wealth = df_rmnch_by_wealth.query(f'country == "{country}"')
-            row['rmnch_by_wealth'] = float(rmnch_by_wealth['mean']) if not rmnch_by_wealth['mean'].empty else None 
-            air_polution = df_air_polution.query(f'country == "{country}"')
-            row['air_polution'] = float(air_polution['total']) if not air_polution['total'].empty else None 
-            basic_sanitation = df_basic_sanitation.query(f'country == "{country}"')
-            row['basic_sanitation'] = float(basic_sanitation['total']) if not basic_sanitation['total'].empty else None 
-            inequality = df_inequality.query(f'country == "{country}"')
-            row['inequality'] = float(inequality['coef']) if not inequality['coef'].empty else None 
-            mortality = df_mortality.query(f'country == "{country}"')
-            row['mortality'] = int(mortality['total']) if not mortality['total'].empty else None 
-            violence = df_violence.query(f'country == "{country}"')
-            row['violence'] = int(violence['total']) if not violence['total'].empty else None 
-            water_quality = df_water_quality.query(f'country == "{country}"')
-            row['water_quality'] = float(water_quality['total']) if not water_quality['total'].empty else None 
+            for col, info in dfs.items():
+                df = info['df']
+                row[col] = transpose_col(df, country, info['target'])
             data.append(row)
         return pd.DataFrame(data).dropna()
 
     def clean(self):
         df = self.format()
         df = self.reset_index(df)
-        df.to_csv(f"{self.clean_dir}/life_expectancy_analysis.csv")
+        print(df)
+        # df.to_csv(f"{self.clean_dir}/life_expectancy_analysis.csv")
 
 dc = DataCleaner()
 dc.clean()
