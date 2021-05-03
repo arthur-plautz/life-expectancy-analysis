@@ -45,9 +45,31 @@ def df_single_scatters(df, show=True):
     else:
         return graphs
 
-def generate_boxplots(df):
+def generate_boxplots(df, show=True):
+    graphs = []
     for feature in FEATURES:
         fig, ax = plt.subplots(figsize=(20,10))
         ax.boxplot(df[feature])
         ax.set_title(feature)
+        graphs.append(fig)
+    if show:
         plt.show()
+    else:
+        return graphs
+
+def generate_hists(df, show=True):
+    graphs = []
+    for feature in FEATURES:
+        fig, ax = plt.subplots(figsize=(20,10))
+        ax.hist(df[feature])
+        ax.set_title(feature)
+        graphs.append(fig)
+    if show:
+        plt.show()
+    else:
+        return graphs
+
+def eda_graphs(df, hist=True, box=True, sct=True):
+    generate_boxplots(df, box)
+    generate_hists(df, hist)
+    df_single_scatters(df, sct)
