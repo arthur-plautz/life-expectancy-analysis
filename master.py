@@ -14,4 +14,4 @@ features = [
 
 scatter_plot(features, df)
 model = multiple_linear_regression(features, df)
-model_adjustment(model)
+model_adjustment(model, features)
