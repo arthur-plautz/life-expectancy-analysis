@@ -220,8 +220,4 @@ class DataCleaner:
     def clean(self):
         df = self.format()
         df = self.reset_index(df)
-        print(df)
-        # df.to_csv(f"{self.clean_dir}/life_expectancy_analysis.csv")
-
-dc = DataCleaner()
-dc.clean()
+        df.to_csv(f"{self.clean_dir}/life_expectancy_analysis.csv")
