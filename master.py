@@ -5,7 +5,7 @@ from scripts.graphs import *
 df = pd.read_csv("./data/clean/life_expectancy_analysis.csv")
 
 eda_graphs(
-    train.df(),
+    df,
     box=False
 )
 

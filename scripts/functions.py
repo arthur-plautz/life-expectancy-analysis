@@ -18,6 +18,7 @@ def feature_metrics(df):
     def format(value):
         return Decimal(value).quantize(Decimal('0.01'))
     corr = df.corr()
+    print(corr['life_expectancy'])
     skew = df.skew()
     kurtosis = df.kurtosis()
     for feature in FEATURES:
@@ -30,3 +31,16 @@ def feature_metrics(df):
         print(f'kurtosis: {format(kurtosis[feature])}')
         print('------------\n')
 
+def get_outliers(df, features):
+    results = {}
+    for feature, factor in features.items():
+        mean = df[feature].mean()
+        out_value = factor['value'] * mean
+        outliers = df.query(f"{feature} {factor['op']} {out_value}") 
+        results[feature] = outliers.index
+    return results
+
+def remove_outliers(df, features):
+    for outliers in features.values():
+        df = df.drop(outliers)
+    return df
