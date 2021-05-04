@@ -70,6 +70,6 @@ def generate_hists(df, show=True):
         return graphs
 
 def eda_graphs(df, hist=True, box=True, sct=True):
-    generate_boxplots(df, box)
+    generate_boxplots(df, False)
     generate_hists(df, hist)
     df_single_scatters(df, sct)
