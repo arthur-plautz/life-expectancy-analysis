@@ -1,9 +1,10 @@
 import pandas as pd
 
 class DataCleaner:
-    def __init__(self):
+    def __init__(self, remove_columns=[]):
         self.raw_dir = 'raw'
         self.clean_dir = 'clean'
+        self.selected_columns = remove_columns
 
     def reset_index(self, df):
         return df.reset_index(drop=True, col_fill=[i for i in range(len(df))])
@@ -62,7 +63,7 @@ class DataCleaner:
         def transform(age):
             return [float(l) for l in age]
         df = self.get_df('life_expectancy')
-        df = df[[df.columns[0], df.columns[1], df.columns[5]]]
+        df = df[[df.columns[0], df.columns[1], df.columns[2]]]
         df = self.who_source_rename(df, col_line=0)
         df = df.query('year == "2019"')
         df = self.reset_index(df)
@@ -195,10 +196,10 @@ class DataCleaner:
                 'df': self.inequality(),
                 'target': 'coef'
             },
-            'mortality': {
-                'df': self.mortality(),
-                'target': 'total'
-            },
+            # 'mortality': {
+            #     'df': self.mortality(),
+            #     'target': 'total'
+            # },
             'violence': {
                 'df': self.violence(),
                 'target': 'total'
@@ -221,3 +222,6 @@ class DataCleaner:
         df = self.format()
         df = self.reset_index(df)
         df.to_csv(f"{self.clean_dir}/life_expectancy_analysis.csv")
+
+dc = DataCleaner(remove_columns=['mortality'])
+dc.clean()

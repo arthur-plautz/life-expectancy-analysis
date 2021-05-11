@@ -4,7 +4,7 @@ FEATURES = [
     'air_polution',
     'basic_sanitation',
     'inequality',
-    'mortality',
     'violence',
     'water_quality'
 ]
+ALPHA = '0.5'

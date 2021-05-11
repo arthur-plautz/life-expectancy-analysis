@@ -1,5 +1,6 @@
 from data.definitions import FEATURES, TARGET
 from sklearn.linear_model import LinearRegression
+from statsmodels.graphics.gofplots import qqplot
 from IPython.display import display
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -7,7 +8,7 @@ import warnings
 warnings.filterwarnings('ignore')
 sns.set(style="whitegrid")
 
-def generate_scatter(x, y, info):
+def generate_scatter(x, y, info=None):
     lr = LinearRegression()
     lr.fit(x,y)
     figure, graph = plt.subplots(figsize=(20,10), dpi=100)
@@ -19,9 +20,11 @@ def generate_scatter(x, y, info):
         x, lr.predict(x),
         color='blue'
     )
-    graph.set_title(info['x'],  fontsize=20)
-    graph.set_xlabel(info['x'], fontsize=15)
-    graph.set_ylabel(info['y'], fontsize=15)
+    if info:
+        graph.set_title(info['x'],  fontsize=20)
+        graph.set_xlabel(info['x'], fontsize=15)
+        graph.set_ylabel(info['y'], fontsize=15)
+    plt.show()
     return figure
 
 def df_single_scatters(df, show=True):
@@ -69,7 +72,20 @@ def generate_hists(df, show=True):
     else:
         return graphs
 
+def generate_hist(df, col):
+    df_col = df[col]
+    fig, ax = plt.subplots(figsize=(20,10))
+    ax.hist(df_col)
+    ax.set_title(col)
+    plt.show()
+
 def eda_graphs(df, hist=True, box=True, sct=True):
-    generate_boxplots(df, False)
-    generate_hists(df, hist)
-    df_single_scatters(df, sct)
+    if box:
+        generate_boxplots(df)
+    if hist:
+        generate_hists(df)
+    if sct:
+        df_single_scatters(df)
+
+def generate_qqplots(model):
+    print(model)
